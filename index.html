@@ -5,7 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clicker game</title>
-    <script type="module" src="index.js"></script>
+    <link rel="stylesheet" href="./Frontend/css/style.css" />
+    <script src="indexo.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <h1>Nombre del "juego"</h1>
+    <div id="enemy-UI">
+      <h3>Enemy1</h3>
+      <div id="health-bar">
+        <p id="current-health"></p>
+      </div>
+      <div class="info">
+        <p>Daño: 3</p>
+        <p>Monstruos restantes para pasar de nivel: 4</p>
+      </div>
+      <div>
+        <h4>
+          SPRITE DEL ENEMIGO (generado al azar y que tenga alguna relación)
+        </h4>
+      </div>
+    </div>
+    <div id="estadisticas">
+      <div class="inventario">
+        <p>DPS: 3</p>
+        <p>Número de clicks</p>
+      </div>
+    </div>
+    <div id="mejoras">
+      <div class="inventario">
+        <p>Monendas para comprar mejoras</p>
+        <p>Lista de mejoras (Abrir una minipestaña que te lleve ahí)</p>
+      </div>
+    </div>
+  </body>
+  <footer>
+    guardar partida, ver estadísticas (clicks totales, clicks en esta sesión,
+    mayores clicks por segundo, etc...
+  </footer>
 </html>

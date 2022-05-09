@@ -1,0 +1,39 @@
+
+
+#health-bar {
+    height: 2rem;
+    width: 33%;
+    background-color: white;
+    border: 2px black solid;
+}
+
+#current-health {
+    transform: translateY(-16px);
+    width: 100%;
+    height: 100%;
+    background: green;
+}
+
+#enemy-UI {
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+#mejoras {
+    display: flex;
+    justify-content: flex-end;
+}
+.inventario {
+    border: 2px black solid;
+}
+
+#estadisticas {
+    display: flex;
+    width: fit-content;
+}
+/* #myTable {
+    width: auto;
+} */
