@@ -1,13 +1,10 @@
-class Player {
+import Character from "./Character.js";
+
+class Player extends Character{
   score = 0;
 
-  constructor(health = 100, damage = 0) {
-    this.health = health;
-    this.damage = damage;
-  }
-
-  attack(damage, target) {
-    target.health -= damage;
+  getScoreBasedOnDamageDealt(damage) {
+    this.score += (damage * 1.2);
   }
 }
 export { Player };

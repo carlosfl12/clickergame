@@ -1,16 +1,6 @@
-class Enemy {
-  maxHealth = 200;
-  constructor(health = this.maxHealth, damage) {
-    this.health = health;
-    this.damage = damage;
-  }
-  getMaxHealth() {
-    return this.maxHealth;
-  }
+import Character from "./Character.js";
+class Enemy extends Character{
 
-  getHealth() {
-    return this.health;
-  }
 }
 
-export { Enemy };
+export  {Enemy };
