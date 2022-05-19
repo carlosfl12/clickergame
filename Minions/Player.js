@@ -1,10 +1,12 @@
-import Character from "./Character.js";
+import Character from './Character.js';
 
-class Player extends Character{
-  score = 0;
-
-  getScoreBasedOnDamageDealt(damage) {
-    this.score += (damage * 1.2);
+class Player extends Character {
+  exp = 0;
+  gainExp(value) {
+    this.exp += value;
+  }
+  getExp() {
+    return this.exp;
   }
 }
 export { Player };
