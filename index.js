@@ -1,30 +1,74 @@
-import { Player } from './Minions/Player.js';
+import ClickHandler from './Handlers/ClickHandler.js';
+import Score from './Handlers/ScoreHandler.js';
+import TimerHandler from './Handlers/TimeHandler.js';
 import { Enemy } from './Minions/Enemy.js';
-const uji = new Player(100, 0);
+import { Player } from './Minions/Player.js';
+import Abilities from './Upgrades/Abilities.js';
+import Upgrade from './Upgrades/Upgrade.js';
+import Utils from './Utils/Utils.js';
 
-const enemy1 = new Enemy();
+const healthBar = document.getElementById('health-bar');
+const p = healthBar.querySelector('p');
 
-uji.attack(1, enemy1);
+const enemy1 = new Enemy(200, 3);
+const player = new Player(150, 20);
+const button = document.querySelector('button');
+button.addEventListener('click', boost);
+const names = ['Blagh', 'Work', 'Mug', 'Jiejie', 'Onka', 'Isoli'];
 
-const button = document.createElement('button');
-const slider = document.createElement('input');
+const enemies = [];
 
-slider.type = 'range';
+for (let i = 1; i <= 10; i++) {
+  const enemy = new Enemy(200 * (i * 0.5), 4);
+  let randNum = parseInt((Math.random() * (names.length - 1)).toFixed(0));
+  enemy.name = names[randNum];
+  enemy.exp = (enemy.stats.health * 0.33) / 2.5;
+  console.log(enemy);
+  enemies.push(enemy);
+}
 
-document.body.appendChild(slider);
+player.target = enemies[0];
 
-slider.max = enemy1.getMaxHealth();
-slider.value = enemy1.getMaxHealth();
+//TODO: Separar cada boost con su respectivo botón
+function boost() {
+  Upgrade.secondsBought = true;
+  Abilities.boostStats(player, 30, 7);
+  document.querySelector('button').disabled = true;
+  const p = document.createElement('p');
+  setInterval(() => {
+    if (Abilities.canBoost) {
+      document.querySelector('button').disabled = false;
+    }
+    document.getElementById('boost').appendChild(p).innerText = 'lala';
+  }, 5);
+}
 
-const p = document.createElement('p');
+ClickHandler.resetCPS();
+TimerHandler.startTimer();
 
-document.body.appendChild(p);
-
-console.log(slider.max);
-document.body.appendChild(button);
-
-button.addEventListener('click', () => {
-  uji.attack(1, enemy1);
-  slider.value = enemy1.getHealth();
-  p.innerText = enemy1.getHealth();
+document.body.addEventListener('click', () => {
+  ClickHandler.clicks++;
+  player.target.recieveDamage(player.stats.damage);
+  document.getElementById(
+    'clicks'
+  ).innerText = `Número de clicks: ${ClickHandler.clicks}`;
+  document.getElementById(
+    'cps'
+  ).innerText = `Clicks por segundo: ${ClickHandler.getAverage()}`;
+  p.style.width = `${player.target.getPercentageHealth()}%`;
+  document.getElementById('dps').innerText = `Daño: ${player.stats.damage}`;
+  Score.addScoreBasedOnDamageDealt(player.stats.damage);
+  if (player.target.getPercentageHealth() <= 10) {
+    player.gainExp(player.target.exp);
+    console.log(
+      `Player gained ${player.target.exp} exp, Current: ${player.getExp()}`
+    );
+    enemies.shift();
+    player.target = enemies[0];
+    document.getElementById('enemy-name').innerText = player.target.name;
+    console.log(player.target.health);
+  }
+  if (!player.target) {
+    console.log('SPAWN BOSS');
+  }
 });

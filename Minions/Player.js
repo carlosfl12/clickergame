@@ -8,5 +8,7 @@ class Player extends Character {
   getExp() {
     return this.exp;
   }
+
+  //TODO: add levels
 }
 export { Player };
