@@ -57,16 +57,20 @@ document.body.addEventListener('click', () => {
   ).innerText = `Clicks por segundo: ${ClickHandler.getAverage()}`;
   p.style.width = `${player.target.getPercentageHealth()}%`;
   document.getElementById('dps').innerText = `Daño: ${player.stats.damage}`;
+  document.getElementsByClassName('amount')[0].innerText =
+    player.exp + '/' + player.expForLeveling;
+  document.getElementById('bar').style.width = `${player.getPercentageExp()}%`;
   Score.addScoreBasedOnDamageDealt(player.stats.damage);
   if (player.target.getPercentageHealth() <= 10) {
     player.gainExp(player.target.exp);
     console.log(
-      `Player gained ${player.target.exp} exp, Current: ${player.getExp()}`
+      `Player gained ${
+        player.target.exp
+      } exp, Current: ${player.getExp()} Player exp % ${player.getPercentageExp()}`
     );
     enemies.shift();
     player.target = enemies[0];
     document.getElementById('enemy-name').innerText = player.target.name;
-    console.log(player.target.health);
   }
   if (!player.target) {
     console.log('SPAWN BOSS');

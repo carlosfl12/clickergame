@@ -1,39 +1,65 @@
-
+:root {
+  margin: 0px;
+  padding: 0px;
+}
 
 #health-bar {
-    height: 2rem;
-    width: 33%;
-    background-color: white;
-    border: 2px black solid;
+  height: 2rem;
+  width: 33%;
+  background-color: white;
+  border: 2px black solid;
 }
 
 #current-health {
-    transform: translateY(-16px);
-    width: 100%;
-    height: 100%;
-    background: green;
+  transform: translateY(-16px);
+  width: 100%;
+  height: 100%;
+  background: green;
 }
 
 #enemy-UI {
-    display:flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-content: center;
-    flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: center;
+  flex-wrap: wrap;
 }
 
 #mejoras {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
 .inventario {
-    border: 2px black solid;
+  border: 2px black solid;
 }
 
 #estadisticas {
-    display: flex;
-    width: fit-content;
+  display: flex;
+  width: fit-content;
 }
 /* #myTable {
     width: auto;
 } */
+
+#exp-bar {
+  margin-top: 2rem;
+  height: 1.5rem;
+  border: 1px solid black;
+}
+
+#bar {
+  width: 0%;
+  height: 100%;
+  transform: translateY(-16px);
+  background-color: rgb(131, 61, 196);
+}
+
+.amount {
+  color: white;
+  transform: translateY(-52px);
+  text-align: center;
+}
+
+footer {
+  margin: 3em;
+}
