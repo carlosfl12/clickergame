@@ -11,7 +11,7 @@ const healthBar = document.getElementById('health-bar');
 const p = healthBar.querySelector('p');
 
 const enemy1 = new Enemy(200, 3);
-const player = new Player(150, 20);
+const player = new Player(150, 200);
 const button = document.querySelector('button');
 button.addEventListener('click', boost);
 const names = ['Blagh', 'Work', 'Mug', 'Jiejie', 'Onka', 'Isoli'];
@@ -34,12 +34,10 @@ function boost() {
   Upgrade.secondsBought = true;
   Abilities.boostStats(player, 30, 7);
   document.querySelector('button').disabled = true;
-  const p = document.createElement('p');
   setInterval(() => {
     if (Abilities.canBoost) {
       document.querySelector('button').disabled = false;
     }
-    document.getElementById('boost').appendChild(p).innerText = 'lala';
   }, 5);
 }
 
@@ -48,6 +46,18 @@ TimerHandler.startTimer();
 
 document.body.addEventListener('click', () => {
   ClickHandler.clicks++;
+  console.log(player.target);
+  if (enemies.length == 1 && player.targetBoss == null) {
+    player.targetBoss = new Enemy(
+      enemies[0].stats.health * 2,
+      enemies[0].stats.damage * 1.5
+    );
+    player.targetBoss.name = 'BOSS!';
+  }
+  if (!player.target) {
+    player.target = player.targetBoss;
+    document.getElementById('enemy-name').innerText = player.target.name;
+  }
   player.target.recieveDamage(player.stats.damage);
   document.getElementById(
     'clicks'
@@ -58,7 +68,7 @@ document.body.addEventListener('click', () => {
   p.style.width = `${player.target.getPercentageHealth()}%`;
   document.getElementById('dps').innerText = `Daño: ${player.stats.damage}`;
   document.getElementsByClassName('amount')[0].innerText =
-    player.exp + '/' + player.expForLeveling;
+    player.exp + '/' + player.expToLevelUp;
   document.getElementById('bar').style.width = `${player.getPercentageExp()}%`;
   Score.addScoreBasedOnDamageDealt(player.stats.damage);
   if (player.target.getPercentageHealth() <= 10) {
@@ -71,6 +81,10 @@ document.body.addEventListener('click', () => {
     enemies.shift();
     player.target = enemies[0];
     document.getElementById('enemy-name').innerText = player.target.name;
+  }
+  if (player.exp >= player.expToLevelUp) {
+    player.levelUp();
+    console.log(player.lvl);
   }
   if (!player.target) {
     console.log('SPAWN BOSS');
