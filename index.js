@@ -3,6 +3,7 @@ import Score from './Handlers/ScoreHandler.js';
 import TimerHandler from './Handlers/TimeHandler.js';
 import { Enemy } from './Minions/Enemy.js';
 import { Player } from './Minions/Player.js';
+import Wizard from './Minions/Wizard.js';
 import Abilities from './Upgrades/Abilities.js';
 import Upgrade from './Upgrades/Upgrade.js';
 import Utils from './Utils/Utils.js';
@@ -10,7 +11,6 @@ import Utils from './Utils/Utils.js';
 const healthBar = document.getElementById('health-bar');
 const p = healthBar.querySelector('p');
 
-const enemy1 = new Enemy(200, 3);
 const player = new Player(150, 200);
 const button = document.querySelector('button');
 button.addEventListener('click', boost);
@@ -39,6 +39,19 @@ function boost() {
       document.querySelector('button').disabled = false;
     }
   }, 5);
+}
+
+const alliesArray = [];
+
+Utils.wizardButton.addEventListener('click', () => {
+  alliesArray.push(new Wizard(50, 20));
+  Utils.wizardQuantity.innerText++;
+});
+
+function dealDamage(target) {
+  alliesArray.forEach((ally) => {
+    target.recieveDamage(ally.damagePerSecond(ally.stats.damage));
+  });
 }
 
 ClickHandler.resetCPS();
@@ -90,3 +103,18 @@ document.body.addEventListener('click', () => {
     console.log('SPAWN BOSS');
   }
 });
+function render() {
+  player.target = enemies[0];
+  p.style.width = `${player.target.getPercentageHealth()}%`;
+  document.getElementById('enemy-name').innerText = player.target.name;
+  //   player.target.recieveDamage(wizard.damagePerSecond(wizard.stats.damage));
+  dealDamage(player.target);
+  if (p.style.width <= '1%') {
+    enemies.shift();
+  }
+  Utils.enemiesLeft.innerText = `Enemies left: ${enemies.length}`;
+}
+
+setInterval(() => {
+  render();
+}, 1000 / Utils.FPS);
