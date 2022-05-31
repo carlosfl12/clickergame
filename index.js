@@ -44,11 +44,11 @@ function boost() {
 const alliesArray = [];
 
 Utils.wizardButton.addEventListener('click', () => {
-  alliesArray.push(new Wizard(50, 20));
+  alliesArray.push(new Wizard(50, 100));
   Utils.wizardQuantity.innerText++;
 });
 
-function dealDamage(target) {
+function alliesDealDamage(target) {
   alliesArray.forEach((ally) => {
     target.recieveDamage(ally.damagePerSecond(ally.stats.damage));
   });
@@ -58,6 +58,9 @@ ClickHandler.resetCPS();
 TimerHandler.startTimer();
 
 document.body.addEventListener('click', () => {
+  if (TimerHandler.paused) {
+    return;
+  }
   ClickHandler.clicks++;
   console.log(player.target);
   if (enemies.length == 1 && player.targetBoss == null) {
@@ -103,18 +106,35 @@ document.body.addEventListener('click', () => {
     console.log('SPAWN BOSS');
   }
 });
+
 function render() {
   player.target = enemies[0];
   p.style.width = `${player.target.getPercentageHealth()}%`;
   document.getElementById('enemy-name').innerText = player.target.name;
-  //   player.target.recieveDamage(wizard.damagePerSecond(wizard.stats.damage));
-  dealDamage(player.target);
+  alliesDealDamage(player.target);
   if (p.style.width <= '1%') {
+    player.gainExp(player.target.exp);
     enemies.shift();
   }
+  if (player.exp >= player.expToLevelUp) {
+    player.levelUp();
+  }
+  Utils.expBar.style.width = `${player.getPercentageExp()}%`;
   Utils.enemiesLeft.innerText = `Enemies left: ${enemies.length}`;
+  const img = document.getElementById('img');
+  img.src = './Frontend/img/orco.png';
+  if (TimerHandler.paused) {
+    TimerHandler.gamePaused();
+  }
 }
-
+document.body.addEventListener('keydown', (e) => {
+  if (e.key == 'Escape') {
+    TimerHandler.paused = !TimerHandler.paused;
+  }
+});
 setInterval(() => {
+  if (TimerHandler.paused) {
+    return;
+  }
   render();
 }, 1000 / Utils.FPS);
