@@ -138,3 +138,32 @@ setInterval(() => {
   }
   render();
 }, 1000 / Utils.FPS);
+
+Utils.saveButton.addEventListener('click', () => {
+  console.log('tiene que guardar');
+
+  let dataToSend = {
+    name: 'Nombre',
+    level: 10,
+    health: 3000,
+    damage: 300,
+    wizard: 3,
+    warrior: 2,
+  };
+  fetch('http://localhost:3000/save', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'JSON',
+    },
+    body: JSON.stringify(dataToSend),
+  });
+});
+
+// async function testeo() {
+// API FUNCIONA
+//   const result = await fetch('http://localhost:3000/enemies');
+//   const res = await result.json();
+//   console.log(res);
+// }
+
+// testeo();

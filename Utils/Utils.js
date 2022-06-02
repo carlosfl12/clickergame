@@ -11,4 +11,5 @@ export default class Utils {
   static wizardQuantity = document.getElementsByClassName('wizard-quantity')[0];
   static enemiesLeft = document.getElementById('enemies-left');
   static expBar = document.getElementById('bar');
+  static saveButton = document.getElementById('save-button');
 }
