@@ -20,6 +20,15 @@ app.get('/', (req, res) => {
   res.send('Api funcionando');
 });
 
+app.get('/player', (req, res) => {
+  const sql = 'select * from player';
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    if (result.length == 0) return;
+    res.json(result);
+  });
+});
+
 app.get('/enemies', (req, res) => {
   const sql = 'SELECT * FROM enemies';
   connection.query(sql, (err, result) => {
@@ -44,12 +53,36 @@ app.get('/enemies/:id', (req, res) => {
 });
 
 app.post('/save', (req, res) => {
-  res.send('Data saved');
+  // res.send('Data saved');
+  const sql = 'Insert into player SET ?';
+  const playerSettings = {
+    name: req.body.name,
+    level: req.body.level,
+    health: req.body.health,
+    damage: req.body.damage,
+    wizard: req.body.wizard,
+    warrior: req.body.warrior,
+  };
+
+  // res.send(req.body.allies.wizard);
+
+  connection.query(sql, playerSettings, (err) => {
+    if (err) throw err;
+
+    res.send('Data saved');
+  });
   //This to save data every 30 min or save
 });
 
 app.put('/update/:id', (req, res) => {
-  res.send('Update enemy');
+  const { id } = req.params;
+  const { level, health, damage, wizard, warrior } = req.body;
+  const sql = `update player set level = '${level}', health = '${health}', damage = '${damage}', wizard = '${wizard}', warrior = '${warrior}' where id = ${id} `;
+
+  connection.query(sql, (err) => {
+    if (err) throw err;
+    res.send(req.body);
+  });
 });
 
 connection.connect((error) => {
