@@ -149,7 +149,7 @@ setInterval(() => {
 }, 1000 / Utils.FPS);
 
 let dataToSend = {
-  name: playerName, //Variable de sesion
+  name: 'LOLO', //Variable de sesion
   level: 15, //Nivel que tenga el player
   health: 3500, // Relacionado con el nivel
   damage: 350,
@@ -157,18 +157,20 @@ let dataToSend = {
   warrior: 7,
 };
 let dataToSend2 = {
-  name: playerName, //Variable de sesion
+  name: 'LOLO', //Variable de sesion
   level: 20, //Nivel que tenga el player
   health: 4500, // Relacionado con el nivel
   damage: 450,
   wizard: 10, //Cada vez que compres un aliado
   warrior: 9,
 };
-
-Utils.createButton.addEventListener(
-  'click',
-  postData('http://localhost:3000/save', dataToSend)
-);
+/**
+ * MEJORAR ESTO |
+ *              V
+ */
+Utils.createButton.addEventListener('click', async () => {
+  postData('http://localhost:3000/save', dataToSend);
+});
 async function postData(url = '', data = {}) {
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -177,6 +179,7 @@ async function postData(url = '', data = {}) {
     },
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
+  console.log('Enviado');
   return response.json(); // parses JSON response into native JavaScript objects
 }
 
@@ -186,6 +189,7 @@ async function getIdByName(name) {
   const res = await result.json();
   for (let response of res) {
     if (response.name == name) {
+      console.log(response.name, name);
       console.log(response.id);
       return response.id;
     }
@@ -203,7 +207,7 @@ async function saveData(id, data) {
   return result.json();
 }
 
-Utils.saveButton.addEventListener(
-  'click',
-  saveData(await getIdByName(playerName), dataToSend2)
-);
+Utils.saveButton.addEventListener('click', async () => {
+  console.log('Save clicked');
+  saveData(await getIdByName(playerName), dataToSend2);
+});
