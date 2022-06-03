@@ -9,6 +9,10 @@
     <script type="module" src="index.js" defer></script>
   </head>
   <body>
+    <form method="post" action="index.html">
+      <input id="player-name" type="text" name="name" />
+      <button id="data">Enviar</button>
+    </form>
     <h1>Nombre del "juego"</h1>
     <div id="enemy-UI">
       <h3 id="enemy-name">Enemy1</h3>
@@ -39,6 +43,7 @@
     <div id="boost">
       <button>Boost</button>
       <button class="wizard">Wizard</button>
+      <button id="create-button">Create</button>
       <button id="save-button">Save!</button>
       <p class="wizard-quantity"></p>
     </div>

@@ -17,6 +17,14 @@ button.addEventListener('click', boost);
 const names = ['Blagh', 'Work', 'Mug', 'Jiejie', 'Onka', 'Isoli'];
 
 const enemies = [];
+Utils.playerName.addEventListener('keydown', (e) => {
+  if (
+    document.getElementById('data').addEventListener('click', () => {
+      document.cookie = 'name = ' + e.target.value;
+    })
+  );
+});
+const playerName = document.cookie.split('=')[1];
 
 for (let i = 1; i <= 10; i++) {
   const enemy = new Enemy(200 * (i * 0.5), 4);
@@ -130,6 +138,7 @@ function render() {
 document.body.addEventListener('keydown', (e) => {
   if (e.key == 'Escape') {
     TimerHandler.paused = !TimerHandler.paused;
+    //Mostrar que el juego está en pausa
   }
 });
 setInterval(() => {
@@ -139,31 +148,62 @@ setInterval(() => {
   render();
 }, 1000 / Utils.FPS);
 
-Utils.saveButton.addEventListener('click', () => {
-  console.log('tiene que guardar');
+let dataToSend = {
+  name: playerName, //Variable de sesion
+  level: 15, //Nivel que tenga el player
+  health: 3500, // Relacionado con el nivel
+  damage: 350,
+  wizard: 5, //Cada vez que compres un aliado
+  warrior: 7,
+};
+let dataToSend2 = {
+  name: playerName, //Variable de sesion
+  level: 20, //Nivel que tenga el player
+  health: 4500, // Relacionado con el nivel
+  damage: 450,
+  wizard: 10, //Cada vez que compres un aliado
+  warrior: 9,
+};
 
-  let dataToSend = {
-    name: 'Nombre',
-    level: 10,
-    health: 3000,
-    damage: 300,
-    wizard: 3,
-    warrior: 2,
-  };
-  fetch('http://localhost:3000/save', {
-    method: 'POST',
+Utils.createButton.addEventListener(
+  'click',
+  postData('http://localhost:3000/save', dataToSend)
+);
+async function postData(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
-      'Content-Type': 'JSON',
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(dataToSend),
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
-});
+  return response.json(); // parses JSON response into native JavaScript objects
+}
 
-// async function testeo() {
-// API FUNCIONA
-//   const result = await fetch('http://localhost:3000/enemies');
-//   const res = await result.json();
-//   console.log(res);
-// }
+async function getIdByName(name) {
+  // API FUNCIONA
+  const result = await fetch('http://localhost:3000/player');
+  const res = await result.json();
+  for (let response of res) {
+    if (response.name == name) {
+      console.log(response.id);
+      return response.id;
+    }
+  }
+}
 
-// testeo();
+async function saveData(id, data) {
+  const result = await fetch(`http://localhost:3000/update/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return result.json();
+}
+
+Utils.saveButton.addEventListener(
+  'click',
+  saveData(await getIdByName(playerName), dataToSend2)
+);
