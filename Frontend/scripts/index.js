@@ -1,12 +1,13 @@
-import ClickHandler from '../../Handlers/ClickHandler.js';
-import Score from '../../Handlers/ScoreHandler.js';
-import TimerHandler from '../../Handlers/TimeHandler.js';
-import { Enemy } from '../../Minions/Enemy.js';
-import { Player } from '../../Minions/Player.js';
-import Wizard from '../../Minions/Wizard.js';
-import Abilities from '../../Upgrades/Abilities.js';
-import Upgrade from '../../Upgrades/Upgrade.js';
-import Utils from '../../Utils/Utils.js';
+import ClickHandler from './Handlers/ClickHandler.js';
+import Score from './Handlers/ScoreHandler.js';
+import TimerHandler from './Handlers/TimeHandler.js';
+import { Enemy } from './Minions/Enemy.js';
+import { Player } from './Minions/Player.js';
+import Wizard from './Minions/Wizard.js';
+import Abilities from './Upgrades/Abilities.js';
+import Upgrade from './Upgrades/Upgrade.js';
+import Test from './Utils/Test.js';
+import Utils from './Utils/Utils.js';
 
 const healthBar = document.getElementById('health-bar');
 const p = healthBar.querySelector('p');
@@ -17,14 +18,13 @@ button.addEventListener('click', boost);
 const names = ['Blagh', 'Work', 'Mug', 'Jiejie', 'Onka', 'Isoli'];
 
 const enemies = [];
-Utils.playerName.addEventListener('keydown', (e) => {
-  if (
-    document.getElementById('data').addEventListener('click', () => {
-      document.cookie = 'name = ' + e.target.value;
-    })
-  );
-});
-const playerName = document.cookie.split('=')[1];
+// Utils.playerName.addEventListener('keydown', (e) => {
+//   if (
+//     document.getElementById('data').addEventListener('click', () => {
+//       document.cookie = 'name = ' + e.target.value;
+//     })
+//   );
+// });
 
 for (let i = 1; i <= 10; i++) {
   const enemy = new Enemy(200 * (i * 0.5), 4);
@@ -64,7 +64,6 @@ function alliesDealDamage(target) {
 
 ClickHandler.resetCPS();
 TimerHandler.startTimer();
-
 document.body.addEventListener('click', () => {
   if (TimerHandler.paused) {
     return;
@@ -149,7 +148,7 @@ setInterval(() => {
 }, 1000 / Utils.FPS);
 
 let dataToSend = {
-  name: 'LOLO', //Variable de sesion
+  //Variable de sesion
   level: 15, //Nivel que tenga el player
   health: 3500, // Relacionado con el nivel
   damage: 350,
@@ -157,7 +156,7 @@ let dataToSend = {
   warrior: 7,
 };
 let dataToSend2 = {
-  name: 'LOLO', //Variable de sesion
+  //Variable de sesion
   level: 20, //Nivel que tenga el player
   health: 4500, // Relacionado con el nivel
   damage: 450,
@@ -168,20 +167,20 @@ let dataToSend2 = {
  * MEJORAR ESTO |
  *              V
  */
-Utils.createButton.addEventListener('click', async () => {
-  postData('http://localhost:3000/save', dataToSend);
-});
-async function postData(url = '', data = {}) {
-  const response = await fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data), // body data type must match "Content-Type" header
-  });
-  console.log('Enviado');
-  return response.json(); // parses JSON response into native JavaScript objects
-}
+// Utils.createButton.addEventListener('click', async () => {
+//   postData('http://localhost:3000/save', dataToSend);
+// });
+// async function postData(url = '', data = {}) {
+//   const response = await fetch(url, {
+//     method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(data), // body data type must match "Content-Type" header
+//   });
+//   console.log('Enviado');
+//   return response.json(); // parses JSON response into native JavaScript objects
+// }
 
 async function getIdByName(name) {
   // API FUNCIONA
@@ -207,7 +206,14 @@ async function saveData(id, data) {
   return result.json();
 }
 
+async function getUserName() {
+  const result = await fetch('http://localhost:3000/username');
+  const res = await result.json();
+  return res.name;
+}
+// console.log(getUserName());
+
 Utils.saveButton.addEventListener('click', async () => {
   console.log('Save clicked');
-  saveData(await getIdByName('LOLO'), dataToSend2);
+  saveData(await getIdByName('Cork'), dataToSend2);
 });
