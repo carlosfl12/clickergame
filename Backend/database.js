@@ -1,5 +1,7 @@
 const express = require('express');
+const session = require('express-session');
 const mysql = require('mysql');
+const path = require('path');
 
 const bodyParser = require('body-parser');
 
@@ -9,39 +11,47 @@ const app = express();
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-  // Request methods you wish to allow
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-  );
-
-  // Request headers you wish to allow
-  res.setHeader(
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
     'Access-Control-Allow-Headers',
-    'X-Requested-With,content-type'
+    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
   );
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
 });
 
 app.use(bodyParser.json());
+
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '/../Frontend/css/')));
+app.use(express.static(path.join(__dirname, '/../Frontend/img/')));
+app.use(express.static(path.join(__dirname, '/../Frontend/scripts/')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../login.html'));
+  console.log(__dirname);
+});
+
+app.post('/index', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../index.html'));
+});
+
+// app.listen(3000);
 
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
   database: 'clickergame',
-});
-
-app.get('/', (req, res) => {
-  res.send('Api funcionando');
 });
 
 app.get('/player', (req, res) => {

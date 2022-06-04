@@ -1,12 +1,12 @@
-import ClickHandler from './Handlers/ClickHandler.js';
-import Score from './Handlers/ScoreHandler.js';
-import TimerHandler from './Handlers/TimeHandler.js';
-import { Enemy } from './Minions/Enemy.js';
-import { Player } from './Minions/Player.js';
-import Wizard from './Minions/Wizard.js';
-import Abilities from './Upgrades/Abilities.js';
-import Upgrade from './Upgrades/Upgrade.js';
-import Utils from './Utils/Utils.js';
+import ClickHandler from '../../Handlers/ClickHandler.js';
+import Score from '../../Handlers/ScoreHandler.js';
+import TimerHandler from '../../Handlers/TimeHandler.js';
+import { Enemy } from '../../Minions/Enemy.js';
+import { Player } from '../../Minions/Player.js';
+import Wizard from '../../Minions/Wizard.js';
+import Abilities from '../../Upgrades/Abilities.js';
+import Upgrade from '../../Upgrades/Upgrade.js';
+import Utils from '../../Utils/Utils.js';
 
 const healthBar = document.getElementById('health-bar');
 const p = healthBar.querySelector('p');
@@ -130,7 +130,7 @@ function render() {
   Utils.expBar.style.width = `${player.getPercentageExp()}%`;
   Utils.enemiesLeft.innerText = `Enemies left: ${enemies.length}`;
   const img = document.getElementById('img');
-  img.src = './Frontend/img/orco.png';
+  img.src = 'orco.png';
   if (TimerHandler.paused) {
     TimerHandler.gamePaused();
   }
@@ -209,5 +209,5 @@ async function saveData(id, data) {
 
 Utils.saveButton.addEventListener('click', async () => {
   console.log('Save clicked');
-  saveData(await getIdByName(playerName), dataToSend2);
+  saveData(await getIdByName('LOLO'), dataToSend2);
 });
