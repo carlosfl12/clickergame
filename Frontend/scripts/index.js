@@ -11,23 +11,10 @@ import Utils from './Utils/Utils.js';
 const healthBar = document.getElementById('health-bar');
 const p = healthBar.querySelector('p');
 
-const player = new Player(150, 200);
+const player = new Player(150, 5);
 const button = document.querySelector('button');
 button.addEventListener('click', boost);
-const names = ['Blagh', 'Work', 'Mug', 'Jiejie', 'Onka', 'Isoli'];
-
-const enemies = [];
-
-for (let i = 1; i <= 10; i++) {
-  const enemy = new Enemy(200 * (i * 0.5), 4);
-  let randNum = parseInt((Math.random() * (names.length - 1)).toFixed(0));
-  enemy.name = names[randNum];
-  enemy.exp = (enemy.stats.health * 0.33) / 2.5;
-  console.log(enemy);
-  enemies.push(enemy);
-}
-
-player.target = enemies[0];
+const enemies = await getEnemies();
 
 //TODO: Separar cada boost con su respectivo botón
 function boost() {
@@ -106,26 +93,41 @@ document.body.addEventListener('click', () => {
 });
 
 function render() {
+  if (TimerHandler.paused) {
+    return;
+  }
   player.target = enemies[0];
+  if (enemies.length == 1 && player.targetBoss == null) {
+    player.targetBoss = new Enemy(
+      enemies[0].stats.health * 2,
+      enemies[0].stats.damage * 1.5
+    );
+    player.targetBoss.name = 'BOSS!';
+  }
+  if (!player.target) {
+    player.target = player.targetBoss;
+    document.getElementById('enemy-name').innerText = player.target.name;
+  }
   p.style.width = `${player.target.getPercentageHealth()}%`;
-  document.getElementById('enemy-name').innerText = player.target.name;
-  alliesDealDamage(player.target);
   if (p.style.width <= '1%') {
     player.gainExp(player.target.exp);
     enemies.shift();
   }
+  document.getElementById('enemy-name').innerText = player.target.name;
+  alliesDealDamage(player.target);
   if (player.exp >= player.expToLevelUp) {
     player.levelUp();
   }
   Utils.expBar.style.width = `${player.getPercentageExp()}%`;
   Utils.enemiesLeft.innerText = `Enemies left: ${enemies.length}`;
-  const img = document.getElementById('img');
-  img.src = 'orco.png';
+  Utils.imagePlace.src = changeImageFromEnemyRace(player.target.race);
   if (TimerHandler.paused) {
     TimerHandler.gamePaused();
   }
-  dataToSend2.level = player.lvl;
-  dataToSend2.wizard = parseInt(Utils.wizardQuantity.innerText);
+  dataToSend.level = player.lvl;
+  dataToSend.wizard = parseInt(Utils.wizardQuantity.innerText);
+  dataToSend.health = player.stats.damage;
+  dataToSend.warrior = parseInt('0');
 }
 document.body.addEventListener('keydown', (e) => {
   if (e.key == 'Escape') {
@@ -140,14 +142,26 @@ setInterval(() => {
   render();
 }, 1000 / Utils.FPS);
 
-let dataToSend2 = {
-  //Variable de sesion
+let dataToSend = {
   level: player.lvl, //Nivel que tenga el player
-  health: 4500, // Relacionado con el nivel
-  damage: 450,
-  wizard: 15, //Cada vez que compres un aliado
-  warrior: 9,
+  health: player.stats.health, // Relacionado con el nivel
+  damage: player.stats.damage,
+  wizard: 0, //Cada vez que compres un aliado
+  warrior: 0,
 };
+
+function changeImageFromEnemyRace(race) {
+  switch (race) {
+    case 'orc':
+      return 'orc.png';
+    case 'goblin':
+      return 'goblin.png';
+    case 'spider':
+      return 'giant-spider.png';
+  }
+}
+
+//API FUNCTIONS
 
 async function getIdByName(name) {
   // API FUNCIONA
@@ -178,5 +192,17 @@ async function getUserName() {
 }
 
 Utils.saveButton.addEventListener('click', async () => {
-  saveData(await getIdByName(await getUserName()), dataToSend2);
+  saveData(await getIdByName(await getUserName()), dataToSend);
 });
+
+async function getEnemies() {
+  const result = await fetch('http://localhost:3000/enemies');
+  const res = await result.json();
+  const enemies = [];
+  for (let enemy of res) {
+    enemies.push(
+      new Enemy(enemy.name, enemy.health, enemy.damage, enemy.exp, enemy.race)
+    );
+  }
+  return enemies;
+}

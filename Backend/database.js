@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
-
+app.disable('etag');
 app.use(
   session({
     secret: 'secret',
@@ -52,7 +52,6 @@ app.post('/index', (req, res) => {
     wizard: 0,
     warrior: 0,
   };
-  // ARREGLAR ESTO
   connection.query(sql, (err, res) => {
     res.length == 1 ? (exists = true) : (exists = false);
 
@@ -87,7 +86,7 @@ app.get('/player', (req, res) => {
 });
 
 app.get('/enemies', (req, res) => {
-  const sql = 'SELECT * FROM enemies';
+  const sql = 'SELECT * FROM enemies LIMIT 10';
   connection.query(sql, (err, result) => {
     if (err) throw err;
     if (result.length == 0) {
@@ -108,29 +107,6 @@ app.get('/enemies/:id', (req, res) => {
     res.json(result);
   });
 });
-
-// app.post('/save', (req, res) => {
-//   console.log(username);
-//   // res.send('Data saved');
-//   const sql = 'Insert into player SET ?';
-//   const playerSettings = {
-//     name: username,
-//     level: req.body.level,
-//     health: req.body.health,
-//     damage: req.body.damage,
-//     wizard: req.body.wizard,
-//     warrior: req.body.warrior,
-//   };
-
-//   // res.send(req.body.allies.wizard);
-
-//   connection.query(sql, playerSettings, (err) => {
-//     if (err) throw err;
-
-//     res.send('Data saved');
-//   });
-//   //This to save data every 30 min or save
-// });
 
 app.get('/username', (req, res) => {
   const sql = `select name from player where name = "${username}" LIMIT 1`;
