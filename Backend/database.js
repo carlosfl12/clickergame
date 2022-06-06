@@ -41,8 +41,9 @@ app.get('/', (req, res) => {
 });
 let username = '';
 app.post('/index', (req, res) => {
+  let exists = false;
   username = req.body.username;
-  const sql = `Insert into player SET ?`;
+  const sql = `select name from player where name = "${username}" LIMIT 1`;
   const playerSettings = {
     name: username,
     level: 1,
@@ -51,25 +52,18 @@ app.post('/index', (req, res) => {
     wizard: 0,
     warrior: 0,
   };
-  console.log(username);
   // ARREGLAR ESTO
-  connection.query(
-    `SELECT name from player where name = '${username}' LIMIT 1`,
-    (err, res) => {
-      res.forEach((rowName) => {
-        console.log(rowName.name);
-        if (rowName.name == username) return;
-        else {
-          connection.query(sql, playerSettings, (err) => {
-            if (err) throw err;
-          });
-        }
+  connection.query(sql, (err, res) => {
+    res.length == 1 ? (exists = true) : (exists = false);
+
+    if (exists) {
+      return;
+    } else {
+      connection.query(`insert into player set ?`, playerSettings, (err) => {
+        if (err) throw err;
       });
     }
-  );
-  // connection.query(sql, playerSettings, (err) => {
-  //   if (err) throw err;
-  // });
+  });
 
   res.sendFile(path.join(__dirname + '/../index.html'));
 });
@@ -139,7 +133,7 @@ app.get('/enemies/:id', (req, res) => {
 // });
 
 app.get('/username', (req, res) => {
-  const sql = `Select name from player where name = '${username}'`;
+  const sql = `select name from player where name = "${username}" LIMIT 1`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
     // if (result.length == 0) {

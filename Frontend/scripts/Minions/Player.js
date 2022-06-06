@@ -22,7 +22,5 @@ class Player extends Character {
     this.lvl++;
     this.expToLevelUp = this.BASE_EXP * (this.lvl * 1.5);
   }
-
-  //TODO: add levels
 }
 export { Player };
