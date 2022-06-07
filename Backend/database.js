@@ -68,7 +68,40 @@ app.post('/index', (req, res) => {
   res.sendFile(path.join(__dirname + '/../index.html'));
 });
 
-// app.listen(3000);
+app.get('/stats', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../stats.html'));
+});
+
+app.get('/playerdata', (req, res) => {
+  const sql = `select * from player where name ='${username}'`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+app.get('/playerstats', (req, res) => {
+  const sql = `select * from stats where name = '${username}'`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+app.post('/stats', (req, res) => {
+  const sql = 'Insert into stats set ?';
+  const now = new Date();
+  const data = {
+    name: username,
+    clicks: req.body.clicks,
+    cps: req.body.cps,
+    score: req.body.score,
+    date: now,
+  };
+  connection.query(sql, data, (err) => {
+    if (err) throw err;
+  });
+});
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -122,8 +155,8 @@ app.get('/username', (req, res) => {
 
 app.put('/update/:id', (req, res) => {
   const { id } = req.params;
-  const { level, health, damage, wizard, warrior } = req.body;
-  const sql = `update player set level = '${level}', health = '${health}', damage = '${damage}', wizard = '${wizard}', warrior = '${warrior}' where id = ${id} `;
+  const { level, health, damage, wizard, warrior, stage } = req.body;
+  const sql = `update player set level = '${level}', health = '${health}', damage = '${damage}', wizard = '${wizard}', warrior = '${warrior}', stage = '${stage}' where id = ${id} `;
 
   connection.query(sql, (err) => {
     if (err) throw err;

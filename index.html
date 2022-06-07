@@ -15,11 +15,13 @@
       <div id="health-bar">
         <p id="current-health"></p>
       </div>
-      <div>
-        <h3 id="score">SCORE: </h3>
+      <div id="gold-div">
+        <img id="gold-coin" src="./goldcoin.png">
+        <h3 id="score">
+        </h3>
       </div>
       <div class="info">
-        <p id="dmg">Daño: </p>
+        <p id="enemy-dmg">Daño: </p>
         <p id="enemies-left">Monstruos restantes para pasar de nivel: </p>
         <p id="stage">Zona: </p>
       </div>
@@ -29,31 +31,43 @@
     </div>
     <div id="estadisticas">
       <div class="stats">
-        <p id="dps">Daño:</p>
+        <p id="player-dmg">Daño: </p>
+        <p id="dps">Daño por segundo:</p>
         <p id="clicks">Número de clicks:</p>
         <p id="cps">Clicks por segundo:</p>
+        <p id="potions">Pociones: 0/5</p>
       </div>
     </div>
     <div id="mejoras">
       <div class="upgrades">
-        <p>Monendas para comprar mejoras</p>
-        <p>Lista de mejoras (Abrir una minipestaña que te lleve ahí)</p>
+        <button id="upgrade-player-attack" title="Aumenta en 1 el daño al jugador 100g">+1 Daño</button>
+        <button id="upgrade-player-health" title="Aumenta en 50 la vida del jugador 100g">+50 vida</button>
+        <button id="upgrade-wizard-damage" title="Aumenta en 0.3 el daño de los magos 150g">+Daño magos</button>
+        <button id="upgrade-warrior-health" title="Aumenta en 0.3 el daño de los guerreros 250g">+Vida magos</button>
+        <button id="upgrade-warrior-damage" title="Aumenta en 0.3 el daño de los guerreros 250g">+Daño guerreros</button>
+        <button id="upgrade-warrior-health" title="Aumenta en 30 la vida de los guerreros 250g">+Vida guerreros</button>
       </div>
     </div>
-    <div id="boost">
-      <button>Boost</button>
-      <button class="wizard">Wizard</button>
-      <button id="save-button">Save!</button>
-      <p class="wizard-quantity">Wizard: </p>
+    <div id="messages">
+      <p id="message"></p>
     </div>
+    <div id="boost">
+      <button>Mejora</button>
+      <button id="potion">Usar poción</button>
+      <button class="wizard" title="Añade 20 de vida y 1.5 de daño (puede curar) 25g">Mago</button>
+      <button class="warrior" title="Añade 40 de vida y 3 de daño (puede hacer crítico) 80g">Guerreo</button>
+      <button id="save-button">Guardar</button>
+      <p class="wizard-quantity">Mago: </p>
+      <p class="warrior-quantity">Guerrero: </p>
+    </div>
+    </div>
+    <div id="player-healthbar">
+      <p id="player-health-bar"></p>
+      <p id="health-amount">0/500</p>
     </div>
     <div id="exp-bar">
       <p id="bar"></p>
-      <p class="amount"></p>
+      <p id="exp-amount"></p>
     </div>
     </body>
-    <footer>
-      guardar partida, ver estadísticas (clicks totales, clicks en esta sesión,
-      mayores clicks por segundo, etc...
-    </footer>
 </html>

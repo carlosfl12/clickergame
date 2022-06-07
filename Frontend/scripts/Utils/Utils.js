@@ -9,6 +9,9 @@ export default class Utils {
 
   static wizardButton = document.getElementsByClassName('wizard')[0];
   static wizardQuantity = document.getElementsByClassName('wizard-quantity')[0];
+  static warriorButton = document.getElementsByClassName('warrior')[0];
+  static warriorQuantity =
+    document.getElementsByClassName('warrior-quantity')[0];
   static enemiesLeft = document.getElementById('enemies-left');
   static expBar = document.getElementById('bar');
   static playerName = document.getElementById('player-name');
@@ -19,8 +22,14 @@ export default class Utils {
   static clicksText = document.getElementById('clicks');
   static cpsText = document.getElementById('cps');
   static dpsText = document.getElementById('dps');
-  static amount = document.getElementsByClassName('amount')[0];
+  static expAmount = document.getElementById('exp-amount');
   static scoreText = document.getElementById('score');
-  static damageText = document.getElementById('dmg');
+  static playerDamage = document.getElementById('player-dmg');
+  static enemyDamage = document.getElementById('enemy-dmg');
   static stageText = document.getElementById('stage');
+  static playerCurrentHealth = document.getElementById('player-health-bar');
+  static playerHealthAmount = document.getElementById('health-amount');
+  static potions = document.getElementById('potions');
+  static potionButton = document.getElementById('potion');
+  static message = document.getElementById('message');
 }
