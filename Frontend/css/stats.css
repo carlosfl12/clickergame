@@ -22,11 +22,11 @@
   );
 }
 
-table {
+#table1 {
   position: absolute;
   z-index: 2;
   left: 50%;
-  top: 50%;
+  top: 43%;
   transform: translate(-50%, -50%);
   width: 60%;
   border-collapse: collapse;
@@ -55,4 +55,20 @@ td {
 
 tr:nth-child(odd) {
   background-color: #eeeeee;
+}
+
+#table2 {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 90%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  box-shadow: 0 12px 5px rgba(9, 56, 121, 1);
+  background: #fafafa;
+  text-align: center;
 }

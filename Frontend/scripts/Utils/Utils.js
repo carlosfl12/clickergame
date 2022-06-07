@@ -18,7 +18,7 @@ export default class Utils {
   static saveButton = document.getElementById('save-button');
   static imagePlace = document.getElementById('img');
   static enemyName = document.getElementById('enemy-name');
-  static boostButton = document.querySelector('button');
+  static boostButton = document.getElementById('boost');
   static clicksText = document.getElementById('clicks');
   static cpsText = document.getElementById('cps');
   static dpsText = document.getElementById('dps');

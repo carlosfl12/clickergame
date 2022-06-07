@@ -13,6 +13,5 @@ export default class TimerHandler {
   }
   static gamePaused() {
     clearInterval(this.timer);
-    console.log('PAUSED');
   }
 }

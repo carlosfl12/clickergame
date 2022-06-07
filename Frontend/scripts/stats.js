@@ -10,9 +10,11 @@ async function getPlayerStats() {
   return res;
 }
 
-const table = document.querySelector('table');
+const table1 = document.getElementById('table1');
 const td = document.createElement('td');
 const clicksDatata = await getStats();
+const playersData = await getPlayerStats();
+const table2 = document.getElementById('table2');
 for (let field of clicksDatata) {
   const date = new Date(field.date);
   const tdName = document.createElement('td');
@@ -21,7 +23,7 @@ for (let field of clicksDatata) {
   const tdScore = document.createElement('td');
   const tdDate = document.createElement('td');
   const otherTr = document.createElement('tr');
-  table.appendChild(otherTr);
+  table1.appendChild(otherTr);
   appendElements(otherTr, tdName, tdClicks, tdCPS, tdScore, tdDate);
   tdName.innerText = field.name;
   tdClicks.innerText = field.clicks;
@@ -29,17 +31,35 @@ for (let field of clicksDatata) {
   tdScore.innerText = field.score;
   tdDate.innerText = date.toLocaleDateString();
 }
-// const table2 = document.getElementById('table2');
-// const playerData = await getPlayerStats();
-// for (let data of playerData) {
-//   const tdName = document.createElement('td');
-//   const tdClicks = document.createElement('td');
-//   const otherTr = document.createElement('tr');
-//   table2.appendChild(otherTr);
-//   appendElements(otherTr, tdName, tdClicks);
-//   tdName.innerText = data.name;
-//   tdClicks.innerText = data.level;
-// }
+
+for (let playerdata of playersData) {
+  const tdName = document.createElement('td');
+  const tdLvl = document.createElement('td');
+  const tdHealth = document.createElement('td');
+  const tdDamage = document.createElement('td');
+  const tdWizard = document.createElement('td');
+  const tdWarrior = document.createElement('td');
+  const tdStage = document.createElement('td');
+  const otherTr = document.createElement('tr');
+  table2.appendChild(otherTr);
+  appendElements(
+    otherTr,
+    tdName,
+    tdLvl,
+    tdHealth,
+    tdDamage,
+    tdWizard,
+    tdWarrior,
+    tdStage
+  );
+  tdName.innerText = playerdata.name;
+  tdLvl.innerText = playerdata.level;
+  tdHealth.innerText = playerdata.health;
+  tdDamage.innerText = playerdata.damage;
+  tdWizard.innerText = playerdata.wizard;
+  tdWarrior.innerText = playerdata.warrior;
+  tdStage.innerText = playerdata.stage;
+}
 function appendElements(where, ...elements) {
   elements.forEach((elem) => {
     where.appendChild(elem);

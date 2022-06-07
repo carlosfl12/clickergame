@@ -133,6 +133,11 @@ async function render() {
     return;
   }
   player.target = enemies[0];
+  if (!player.target) {
+    player.target = enemies[0];
+    console.log(player.target);
+    console.log(enemies[0]);
+  }
   if (enemies.length == 1 && !isBoss) {
     enemies.push(
       new Enemy(
@@ -146,7 +151,12 @@ async function render() {
     );
     isBoss = true;
   }
-  if (player.target.stats.health <= 35 && isBoss && enemies.length == 1) {
+
+  if (
+    player.target.stats.health <= player.stats.damage &&
+    isBoss &&
+    enemies.length == 1
+  ) {
     enemies = await getEnemies();
     isBoss = false;
     previousStage = stage;
@@ -192,10 +202,8 @@ async function render() {
     TimerHandler.gamePaused();
   }
   if (player.stats.health <= 0) {
-    console.log(username);
-
     TimerHandler.paused = true;
-    let response = confirm('You lose retry again?');
+    let response = confirm('Has perdido. ¿Intentar de nuevo?');
     if (response) {
       location.reload();
     } else {
