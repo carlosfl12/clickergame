@@ -18,4 +18,8 @@ export default class Character {
   damagePerSecond(damage) {
     return damage / 1000;
   }
+
+  static addHealth(target, qty) {
+    target.stats.maxHealth += qty;
+  }
 }

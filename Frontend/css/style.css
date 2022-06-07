@@ -29,10 +29,16 @@
   display: flex;
   justify-content: flex-end;
 }
-.inventario {
+.stats {
   border: 2px black solid;
+  position: relative;
+  top: -215px;
 }
-
+.upgrades {
+  border: 2px black solid;
+  position: relative;
+  bottom: 337px;
+}
 #estadisticas {
   display: flex;
   width: fit-content;
@@ -62,4 +68,12 @@
 
 footer {
   margin: 3em;
+}
+
+#img {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  position: fixed;
 }

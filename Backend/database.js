@@ -51,6 +51,7 @@ app.post('/index', (req, res) => {
     damage: 10,
     wizard: 0,
     warrior: 0,
+    stage: 0,
   };
   connection.query(sql, (err, res) => {
     res.length == 1 ? (exists = true) : (exists = false);
@@ -86,7 +87,7 @@ app.get('/player', (req, res) => {
 });
 
 app.get('/enemies', (req, res) => {
-  const sql = 'SELECT * FROM enemies LIMIT 10';
+  const sql = 'SELECT * FROM enemies ORDER BY RAND() LIMIT 10';
   connection.query(sql, (err, result) => {
     if (err) throw err;
     if (result.length == 0) {

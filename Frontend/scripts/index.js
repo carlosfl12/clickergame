@@ -10,124 +10,143 @@ import Utils from './Utils/Utils.js';
 
 const healthBar = document.getElementById('health-bar');
 const p = healthBar.querySelector('p');
+let stage = 1;
 
 const player = new Player(150, 5);
-const button = document.querySelector('button');
+const button = Utils.boostButton;
 button.addEventListener('click', boost);
-const enemies = await getEnemies();
+let enemies = await getEnemies();
+let alliesDPS = 0;
+let isBoss = false;
+const alliesArray = [];
 
 //TODO: Separar cada boost con su respectivo botón
 function boost() {
   Upgrade.secondsBought = true;
   Abilities.boostStats(player, 30, 7);
-  document.querySelector('button').disabled = true;
+  button.disabled = true;
   setInterval(() => {
     if (Abilities.canBoost) {
-      document.querySelector('button').disabled = false;
+      button.disabled = false;
     }
   }, 5);
 }
 
-const alliesArray = [];
-
 Utils.wizardButton.addEventListener('click', () => {
-  alliesArray.push(new Wizard(50, 100));
-  Utils.wizardQuantity.innerText++;
+  if (Score.gold < 25 + Wizard.wizardQuantity) {
+    // return;
+  }
+  Score.gold -= 25;
+  alliesArray.push(new Wizard(50, 1.5));
+  Wizard.wizardBought();
+  alliesDPS += 1.5;
+  Wizard.addHealth(player, 50);
+  Utils.wizardQuantity.innerText = `Wizard: ${Wizard.wizardQuantity}`;
 });
 
 function alliesDealDamage(target) {
   alliesArray.forEach((ally) => {
-    target.recieveDamage(ally.damagePerSecond(ally.stats.damage));
+    target.recieveDamage(ally.stats.damage);
   });
 }
 
 ClickHandler.resetCPS();
 TimerHandler.startTimer();
-document.body.addEventListener('click', () => {
+Utils.imagePlace.addEventListener('click', () => {
   if (TimerHandler.paused) {
     return;
   }
   ClickHandler.clicks++;
-  console.log(player.target);
-  if (enemies.length == 1 && player.targetBoss == null) {
-    player.targetBoss = new Enemy(
-      enemies[0].stats.health * 2,
-      enemies[0].stats.damage * 1.5
+  if (enemies.length == 1 && !isBoss) {
+    enemies.push(
+      new Enemy(
+        enemies[0].name + ' Boss',
+        enemies[0].stats.health * 2,
+        enemies[0].stats.damage * 1.5,
+        enemies[0].exp * 3,
+        enemies[0].race,
+        enemies[0].gold * player.lvl
+      )
     );
-    player.targetBoss.name = 'BOSS!';
-  }
-  if (!player.target) {
-    player.target = player.targetBoss;
-    document.getElementById('enemy-name').innerText = player.target.name;
+    isBoss = true;
   }
   player.target.recieveDamage(player.stats.damage);
-  document.getElementById(
-    'clicks'
-  ).innerText = `Número de clicks: ${ClickHandler.clicks}`;
-  document.getElementById(
-    'cps'
-  ).innerText = `Clicks por segundo: ${ClickHandler.getAverage()}`;
+  Utils.clicksText.innerText = `Número de clicks: ${ClickHandler.clicks}`;
+  Utils.cpsText.innerText = `Clicks por segundo: ${ClickHandler.getAverage()}`;
   p.style.width = `${player.target.getPercentageHealth()}%`;
-  document.getElementById('dps').innerText = `Daño: ${player.stats.damage}`;
-  document.getElementsByClassName('amount')[0].innerText =
-    player.exp + '/' + player.expToLevelUp;
-  document.getElementById('bar').style.width = `${player.getPercentageExp()}%`;
+  Utils.dpsText.innerText = `Daño: ${player.stats.damage}`;
+  Utils.amount.innerText = player.exp + '/' + player.expToLevelUp;
+  Utils.expBar.style.width = `${player.getPercentageExp()}%`;
   Score.addScoreBasedOnDamageDealt(player.stats.damage);
-  if (player.target.getPercentageHealth() <= 10) {
+  if (player.target.getPercentageHealth() <= 1) {
     player.gainExp(player.target.exp);
-    console.log(
-      `Player gained ${
-        player.target.exp
-      } exp, Current: ${player.getExp()} Player exp % ${player.getPercentageExp()}`
-    );
+    Score.addGold(player.target.gold);
     enemies.shift();
     player.target = enemies[0];
-    document.getElementById('enemy-name').innerText = player.target.name;
   }
   if (player.exp >= player.expToLevelUp) {
     player.levelUp();
   }
-  if (!player.target) {
-    console.log('SPAWN BOSS');
-  }
 });
 
-function render() {
+setInterval(() => {
+  Score.addScoreBasedOnDamageDealt(alliesDPS);
+  alliesDealDamage(player.target);
+}, 1000);
+
+async function render() {
+  Utils.scoreText.innerText = Score.gold;
   if (TimerHandler.paused) {
     return;
   }
   player.target = enemies[0];
-  if (enemies.length == 1 && player.targetBoss == null) {
-    player.targetBoss = new Enemy(
-      enemies[0].stats.health * 2,
-      enemies[0].stats.damage * 1.5
+  if (enemies.length == 1 && !isBoss) {
+    enemies.push(
+      new Enemy(
+        enemies[0].name + ' Boss',
+        enemies[0].stats.health * 2,
+        enemies[0].stats.damage * 1.5,
+        enemies[0].exp * 3,
+        enemies[0].race,
+        enemies[0].gold * player.lvl
+      )
     );
-    player.targetBoss.name = 'BOSS!';
+    isBoss = true;
   }
-  if (!player.target) {
-    player.target = player.targetBoss;
-    document.getElementById('enemy-name').innerText = player.target.name;
+  console.log(player.target.stats.health, isBoss, enemies.length);
+  if (player.target.stats.health <= 35 && isBoss && enemies.length == 1) {
+    enemies = await getEnemies();
+    isBoss = false;
+    stage++;
   }
+  Utils.stageText.innerText = `Zona: ${stage}`;
   p.style.width = `${player.target.getPercentageHealth()}%`;
-  if (p.style.width <= '1%') {
+  if (
+    p.style.width <= '1.5%' ||
+    player.target.stats.health <= alliesDPS / 100
+  ) {
     player.gainExp(player.target.exp);
+    Score.addGold(player.target.gold);
     enemies.shift();
   }
-  document.getElementById('enemy-name').innerText = player.target.name;
-  alliesDealDamage(player.target);
+  Utils.amount.innerText = player.exp + '/' + player.expToLevelUp;
+  Utils.enemyName.innerText = player.target.name;
+  Utils.dpsText.innerText = `Daño por segundo: ${alliesDPS}`;
+  Utils.damageText.innerText = `Daño: ${player.target.stats.damage}`;
   if (player.exp >= player.expToLevelUp) {
     player.levelUp();
   }
   Utils.expBar.style.width = `${player.getPercentageExp()}%`;
-  Utils.enemiesLeft.innerText = `Enemies left: ${enemies.length}`;
+  Utils.enemiesLeft.innerText = `Enemigos restantes: ${enemies.length}`;
   Utils.imagePlace.src = changeImageFromEnemyRace(player.target.race);
   if (TimerHandler.paused) {
     TimerHandler.gamePaused();
   }
   dataToSend.level = player.lvl;
-  dataToSend.wizard = parseInt(Utils.wizardQuantity.innerText);
+  dataToSend.wizard = Wizard.wizardQuantity;
   dataToSend.health = player.stats.damage;
   dataToSend.warrior = parseInt('0');
+  dataToSend.stage = stage;
 }
 document.body.addEventListener('keydown', (e) => {
   if (e.key == 'Escape') {
@@ -148,6 +167,7 @@ let dataToSend = {
   damage: player.stats.damage,
   wizard: 0, //Cada vez que compres un aliado
   warrior: 0,
+  stage: 0,
 };
 
 function changeImageFromEnemyRace(race) {
@@ -158,6 +178,10 @@ function changeImageFromEnemyRace(race) {
       return 'goblin.png';
     case 'spider':
       return 'giant-spider.png';
+    case 'troll':
+      return 'troll.png';
+    case 'lich':
+      return 'lich.png';
   }
 }
 
@@ -201,7 +225,14 @@ async function getEnemies() {
   const enemies = [];
   for (let enemy of res) {
     enemies.push(
-      new Enemy(enemy.name, enemy.health, enemy.damage, enemy.exp, enemy.race)
+      new Enemy(
+        enemy.name,
+        enemy.health + player.lvl * 5,
+        enemy.damage + player.lvl * 2,
+        enemy.exp + player.lvl * 0.5,
+        enemy.race,
+        enemy.gold + player.lvl
+      )
     );
   }
   return enemies;

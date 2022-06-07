@@ -3,7 +3,7 @@ import Character from './Character.js';
 class Player extends Character {
   lvl = 1;
   exp = 0;
-  BASE_EXP = 200;
+  BASE_EXP = 400;
   expToLevelUp = this.BASE_EXP;
   gainExp(value) {
     this.exp += value;
@@ -20,7 +20,7 @@ class Player extends Character {
   levelUp() {
     this.exp = this.expToLevelUp;
     this.lvl++;
-    this.expToLevelUp = this.BASE_EXP * (this.lvl * 1.5);
+    this.expToLevelUp = this.BASE_EXP * (this.lvl * 3.5);
   }
 }
 export { Player };
