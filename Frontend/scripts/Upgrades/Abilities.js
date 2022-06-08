@@ -10,6 +10,7 @@ export default class Abilities {
       currentTime = Upgrade.addSecondsToBoosts(seconds * 1000, 3 * 1000);
     }
     const interval = setInterval(() => {
+      currentTime -= 1000;
       if (currentTime == 0) {
         clearInterval(interval);
         this.canBoost = true;
@@ -21,7 +22,6 @@ export default class Abilities {
   }
 
   static boostScore(score) {
-    //haz cosas
     return score * 1.5;
   }
 }

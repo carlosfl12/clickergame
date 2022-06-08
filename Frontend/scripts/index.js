@@ -18,23 +18,34 @@ let dataToSend = {};
 let username = await getUserName();
 
 const player = new Player(150, 5);
-const button = Utils.boostButton;
-button.addEventListener('click', boost);
+Utils.boostButton.addEventListener('click', boost);
 let enemies = await getEnemies();
 let alliesDPS = 0;
 let isBoss = false;
 const alliesArray = [];
 
 function boost() {
+  if (player.stats.health < player.stats.maxHealth / 1.5) {
+    return;
+  }
+  player.stats.health /= 1.5;
   Upgrade.secondsBought = true;
   Abilities.boostStats(player, 5, 7);
-  button.disabled = true;
+  Utils.boostButton.disabled = true;
   setInterval(() => {
     if (Abilities.canBoost) {
-      button.disabled = false;
+      Utils.boostButton.disabled = false;
     }
-  }, 5);
+  }, 1000);
 }
+
+Utils.playerButtonDamage.addEventListener('click', () => {
+  if (Score.gold < 100) {
+    return;
+  }
+  Score.gold -= 100;
+  player.stats.damage += 1;
+});
 
 Utils.wizardButton.addEventListener('click', () => {
   if (Score.gold < 25 + Wizard.wizardQuantity) {

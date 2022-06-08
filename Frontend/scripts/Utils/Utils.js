@@ -18,13 +18,14 @@ export default class Utils {
   static saveButton = document.getElementById('save-button');
   static imagePlace = document.getElementById('img');
   static enemyName = document.getElementById('enemy-name');
-  static boostButton = document.getElementById('boost');
+  static boostButton = document.getElementsByClassName('boost')[0];
   static clicksText = document.getElementById('clicks');
   static cpsText = document.getElementById('cps');
   static dpsText = document.getElementById('dps');
   static expAmount = document.getElementById('exp-amount');
   static scoreText = document.getElementById('score');
   static playerDamage = document.getElementById('player-dmg');
+  static playerButtonDamage = document.getElementById('upgrade-player-attack');
   static enemyDamage = document.getElementById('enemy-dmg');
   static stageText = document.getElementById('stage');
   static playerCurrentHealth = document.getElementById('player-health-bar');
