@@ -237,7 +237,7 @@ async function render() {
   }
   dataToSend.level = player.lvl;
   dataToSend.wizard = Wizard.wizardQuantity;
-  dataToSend.health = player.stats.health;
+  dataToSend.health = player.stats.maxHealth;
   dataToSend.warrior = Warrior.warriorQuantity;
   dataToSend.stage = stage;
 }
