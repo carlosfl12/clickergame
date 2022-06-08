@@ -91,7 +91,11 @@ Utils.imagePlace.addEventListener('click', () => {
     return;
   }
   ClickHandler.clicks++;
-  if (enemies.length == 1 && !isBoss) {
+  if (
+    player.target.stats.health <= player.stats.damage &&
+    enemies.length == 1 &&
+    !isBoss
+  ) {
     enemies.push(
       new Enemy(
         enemies[0].name + ' Boss',
@@ -165,6 +169,7 @@ async function render() {
 
   if (
     player.target.stats.health <= player.stats.damage &&
+    player.target.stats.healht <= alliesDPS &&
     isBoss &&
     enemies.length == 1
   ) {
@@ -197,7 +202,9 @@ async function render() {
     player.stats.health = player.stats.maxHealth;
   }
   Utils.playerCurrentHealth.style.width = `${player.getPercentageHealth()}%`;
-  Utils.playerHealthAmount.innerText = `${player.stats.health} / ${player.stats.maxHealth}`;
+  Utils.playerHealthAmount.innerText = `${player.stats.health.toFixed(0)} / ${
+    player.stats.maxHealth
+  }`;
   Utils.expAmount.innerText = player.exp + '/' + player.expToLevelUp;
   Utils.enemyName.innerText = player.target.name;
   Utils.playerDamage.innerText = `Daño: ${player.stats.damage}`;
