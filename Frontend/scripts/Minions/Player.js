@@ -19,8 +19,10 @@ class Player extends Character {
 
   levelUp() {
     this.exp = this.expToLevelUp;
+    this.stats.damage++;
+    this.stats.maxHealth += 10;
     this.lvl++;
-    this.expToLevelUp = this.BASE_EXP * (this.lvl * 3.5);
+    this.expToLevelUp = this.BASE_EXP * this.lvl;
   }
 }
 export { Player };

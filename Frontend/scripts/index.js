@@ -17,7 +17,7 @@ let previousStage = 0;
 let dataToSend = {};
 let username = await getUserName();
 
-const player = new Player(150, 5);
+const player = new Player(150, 25);
 Utils.boostButton.addEventListener('click', boost);
 let enemies = await getEnemies();
 let alliesDPS = 0;
@@ -129,6 +129,9 @@ Utils.imagePlace.addEventListener('click', () => {
 });
 
 setInterval(() => {
+  if (TimerHandler.paused) {
+    return;
+  }
   Utils.message.hidden = true;
   Score.addScoreBasedOnDamageDealt(alliesDPS);
   alliesDealDamage(player.target);
@@ -143,15 +146,14 @@ setInterval(() => {
 
 async function render() {
   Utils.scoreText.innerText = Score.gold;
-  Utils.potions.innerText = `Potions: ${Potions.potions} / ${Potions.maxPotions}`;
+  Utils.potions.innerText = `Pociones: ${Potions.potions} / ${Potions.maxPotions}`;
   if (TimerHandler.paused) {
     return;
   }
   player.target = enemies[0];
   if (!player.target) {
+    enemies = await getEnemies();
     player.target = enemies[0];
-    console.log(player.target);
-    console.log(enemies[0]);
   }
   if (enemies.length == 1 && !isBoss) {
     enemies.push(
@@ -166,10 +168,8 @@ async function render() {
     );
     isBoss = true;
   }
-
   if (
-    player.target.stats.health <= player.stats.damage &&
-    player.target.stats.healht <= alliesDPS &&
+    player.target.stats.health <= alliesDPS + player.stats.damage &&
     isBoss &&
     enemies.length == 1
   ) {
@@ -236,6 +236,7 @@ async function render() {
     }
   }
   dataToSend.level = player.lvl;
+  dataToSend.damage = player.stats.damage;
   dataToSend.wizard = Wizard.wizardQuantity;
   dataToSend.health = player.stats.maxHealth;
   dataToSend.warrior = Warrior.warriorQuantity;
